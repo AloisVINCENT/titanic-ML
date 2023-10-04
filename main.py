@@ -92,86 +92,86 @@ forest_model.fit(X, y)
 forest_pred = forest_model.predict(X_test)
 print("Done predicting using RandomForest.\n")
 
-#####################################################################
-################## Création du modèle de GBM ########################
-#####################################################################
+# #####################################################################
+# ################## Création du modèle de GBM ########################
+# #####################################################################
 
-# Créer le GBM
-gbm_model = GradientBoostingClassifier(n_estimators=500, max_depth=5, random_state=1)
+# # Créer le GBM
+# gbm_model = GradientBoostingClassifier(n_estimators=500, max_depth=5, random_state=1)
 
-# Entraîner le GBM
-print("Predicting using GBM...")
-gbm_model.fit(X, y)
+# # Entraîner le GBM
+# print("Predicting using GBM...")
+# gbm_model.fit(X, y)
 
-# Faire des prédictions
-gbm_pred = gbm_model.predict(X_test)
-print("Done predicting using GBM.\n")
+# # Faire des prédictions
+# gbm_pred = gbm_model.predict(X_test)
+# print("Done predicting using GBM.\n")
 
-#####################################################################
-########### Création du modèle de Régression logistique #############
-#####################################################################
-
-
-# Créer le modèle de régression logistique
-logistic_model = LogisticRegression(max_iter=1000)
+# #####################################################################
+# ########### Création du modèle de Régression logistique #############
+# #####################################################################
 
 
-# Entraîner le modèle sur l'ensemble d'entraînement
-print("Predicting using LogisticRegression...")
-logistic_model.fit(X, y)
+# # Créer le modèle de régression logistique
+# logistic_model = LogisticRegression(max_iter=1000)
 
-# Faire des prédictions sur l'ensemble de test
-logistic_pred = logistic_model.predict(X_test)
-print("Done predicting using LogisticRegression.\n")
 
-#####################################################################
-###################### Cross-Validation #############################
-#####################################################################
-"""
-k = 5
-#Calculer le score de chaque modèle
-print("Calculating RandomForest score...")
-forest_model_score = cross_val_score(forest_model, X, y, cv=k, scoring = 'accuracy')
-print("Calculating GBM score...")
-gbm_model_score = cross_val_score(gbm_model, X, y, cv=k, scoring = 'accuracy')
-print("Calculating LogisticRegression score...\n")
-logistic_model_score = cross_val_score(logistic_model, X, y, cv=k, scoring = 'accuracy')
+# # Entraîner le modèle sur l'ensemble d'entraînement
+# print("Predicting using LogisticRegression...")
+# logistic_model.fit(X, y)
 
-#Calculer la moyenne des scores
-mean_forest_model_score = np.mean(forest_model_score)
-mean_gbm_model_score = np.mean(gbm_model_score)
-mean_logistic_model_score = np.mean(logistic_model_score)
+# # Faire des prédictions sur l'ensemble de test
+# logistic_pred = logistic_model.predict(X_test)
+# print("Done predicting using LogisticRegression.\n")
 
-print("RandomForest mean Accuracy:", mean_forest_model_score)
-print("GBM mean Accuracy:", mean_gbm_model_score)
-print("LogisticRegression mean Accuracy:", mean_logistic_model_score)
-"""
-#####################################################################
-##################### Création du Stacking ##########################
-#####################################################################
+# #####################################################################
+# ###################### Cross-Validation #############################
+# #####################################################################
+# """
+# k = 5
+# #Calculer le score de chaque modèle
+# print("Calculating RandomForest score...")
+# forest_model_score = cross_val_score(forest_model, X, y, cv=k, scoring = 'accuracy')
+# print("Calculating GBM score...")
+# gbm_model_score = cross_val_score(gbm_model, X, y, cv=k, scoring = 'accuracy')
+# print("Calculating LogisticRegression score...\n")
+# logistic_model_score = cross_val_score(logistic_model, X, y, cv=k, scoring = 'accuracy')
 
-# Créer un nouveau jeu de données avec les prédictions des 3 modèles
-X_train_stack = X.copy()
-X_train_stack['RandomForest'] = forest_model.predict(X)
-X_train_stack['GBM'] = gbm_model.predict(X)
-X_train_stack['LogisticRegression'] = logistic_model.predict(X)
+# #Calculer la moyenne des scores
+# mean_forest_model_score = np.mean(forest_model_score)
+# mean_gbm_model_score = np.mean(gbm_model_score)
+# mean_logistic_model_score = np.mean(logistic_model_score)
 
-X_test_stack = X_test.copy()
-X_test_stack['RandomForest'] = forest_model.predict(X_test)
-X_test_stack['GBM'] = gbm_model.predict(X_test)
-X_test_stack['LogisticRegression'] = logistic_model.predict(X_test)
+# print("RandomForest mean Accuracy:", mean_forest_model_score)
+# print("GBM mean Accuracy:", mean_gbm_model_score)
+# print("LogisticRegression mean Accuracy:", mean_logistic_model_score)
+# """
+# #####################################################################
+# ##################### Création du Stacking ##########################
+# #####################################################################
 
-print("Predicting using level 2 Stacking...")
-level2_model = RandomForestClassifier(n_estimators= 500, max_depth = 5, random_state=1)
-level2_model.fit(X_train_stack, y)
+# # Créer un nouveau jeu de données avec les prédictions des 3 modèles
+# X_train_stack = X.copy()
+# X_train_stack['RandomForest'] = forest_model.predict(X)
+# X_train_stack['GBM'] = gbm_model.predict(X)
+# X_train_stack['LogisticRegression'] = logistic_model.predict(X)
 
-lvl2_pred = level2_model.predict(X_test_stack)
-print("Done predicting using level 2 Stacking.\n")
+# X_test_stack = X_test.copy()
+# X_test_stack['RandomForest'] = forest_model.predict(X_test)
+# X_test_stack['GBM'] = gbm_model.predict(X_test)
+# X_test_stack['LogisticRegression'] = logistic_model.predict(X_test)
+
+# print("Predicting using level 2 Stacking...")
+# level2_model = RandomForestClassifier(n_estimators= 500, max_depth = 5, random_state=1)
+# level2_model.fit(X_train_stack, y)
+
+# lvl2_pred = level2_model.predict(X_test_stack)
+# print("Done predicting using level 2 Stacking.\n")
 
 #####################################################################
 ##################### Création de l'output ##########################
 #####################################################################
 
-output = pd.DataFrame({'PassengerId': test_data.PassengerId, 'Survived': lvl2_pred})
+output = pd.DataFrame({'PassengerId': test_data.PassengerId, 'Survived': forest_pred})
 output.to_csv('submission.csv', index=False)
 print("Your submission was successfully saved!")
